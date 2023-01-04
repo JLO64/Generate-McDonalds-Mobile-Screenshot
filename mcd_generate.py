@@ -59,30 +59,30 @@ def create_screenshot_with_code(order):
 	if (order.current_hour < 10):
 		d1.text(( (width * 0.047), (height * 0.0268)), str(order.current_hour), fill =(0, 0, 0),font=timeFont)
 	else:
-		d1.text(( (width * 0.023), (height * 0.0268)), str(order.current_hour), fill =(0, 0, 0),font=timeFont)
+		d1.text(( (width * 0.025), (height * 0.0268)), str(order.current_hour), fill =(0, 0, 0),font=timeFont)
 	return img
 
-def check_if_api_or_local(argv):
+def check_if_api_or_cli(argv):
 	try:
-		opts, args = getopt.getopt(argv, "la", ["local", "api-server", "code="])
+		opts, args = getopt.getopt(argv, "la", ["cli", "api-server", "code="])
 	except getopt.GetoptError:
 		print ( "Invalid arguments. Please use -h or --help for help." )
 		sys.exit(2)
 	if( len(opts) == 0 ):
 		print("No arguments passed, exiting program")
 		sys.exit()
-	#check if run locally or run api
+	#check if run cli or run api
 	for opt, arg in opts:
 		if (opt == "--api-server"):
 			print("API arguments passed, running API")
 			uvicorn.run(app, host="0.0.0.0", port=3500)
 			sys.exit()
-		elif (opt == "--local"):
-			print("Local arguments passed, running locally")
-			run_locally(opts)
+		elif (opt == "--cli"):
+			print("CLI arguments passed")
+			run_cli(opts)
 			sys.exit()
 
-def run_locally(opts):
+def run_cli(opts):
 	currentOrder = orderInfo()
 	currentOrder = get_time_vars(currentOrder)
 
@@ -95,4 +95,4 @@ def run_locally(opts):
 	create_screenshot_with_code(currentOrder).save(screenshot_wCode_path)
 
 if __name__=="__main__":
-	check_if_api_or_local(sys.argv[1:])
+	check_if_api_or_cli(sys.argv[1:])
