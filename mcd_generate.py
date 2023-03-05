@@ -30,10 +30,13 @@ def get_time_vars(order):
 def create_screenshot_with_code(order):
 	img = Image.open(blank_screenshot_path)
 	d1 = ImageDraw.Draw(img)
-	codeFont = ImageFont.truetype('resources/Heebo-Black.ttf', 130)
+	codeFont = ImageFont.truetype('resources/Heebo-Black.ttf', 120)
 	timeFont = ImageFont.truetype('resources/HelveticaNeue-Medium.otf', 49)
 	width, height = img.size
-	d1.text(( (width * 0.37), (height * 0.20)), order.code, fill =(0, 0, 0),font=codeFont)
+
+	d1.text( (width * (0.50 - len(str(order.code)) * 0.03) , (height * 0.20)), str(order.code), fill =(0, 0, 0),font=codeFont)
+
+
 	if (order.current_minute < 10):
 		d1.text(( (width * 0.084), (height * 0.0268)), ( "0" + str(order.current_minute)), fill =(0, 0, 0),font=timeFont)
 	else:
@@ -76,16 +79,19 @@ def runfromlambda(code):
 	currentOrder.code = code
 	return create_screenshot_with_code(currentOrder)
 
-def run_cli(opts):
+def run_cli():
 	currentOrder = orderInfo()
 	currentOrder = get_time_vars(currentOrder)
-	currentOrder.code = 1701
+	currentOrder.code = "16258"
 
 
 	#for opt, arg in opts:
 	#	if opt in ("-c", "--code"): currentOrder.code = arg
 
-	create_screenshot_with_code(currentOrder).save(screenshot_wCode_path)
+	#save bytes-like object to file
+	with open(screenshot_wCode_path, 'wb') as f:
+		f.write(create_screenshot_with_code(currentOrder))
+		f.close()
 
 if __name__=="__main__":
-	check_if_api_or_cli(sys.argv[1:])
+	run_cli()
