@@ -4,6 +4,7 @@
 Have you ever had a friend or family member order something from McDonalds on their app, but they want you to pick it up for them, but you dont have their phone? Well, this is the solution for you. This is a simple python server that will generate a screenshot of the order confirmation page from the McDonalds app. Just send a http Get request and it will return a screenshot of the order confirmation page!
 
 <img src="mcd_example_screenshot.jpg" height="500">
+
 ## AWS Lambda
 
 To run this script on AWS Lambda, first download the pip packages from the requirements.txt file to the code directory using the following command:
