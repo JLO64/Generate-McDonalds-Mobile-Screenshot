@@ -55,7 +55,7 @@ def create_screenshot_with_code(order):
 
 def check_if_api_or_cli(argv):
 	try:
-		opts, args = getopt.getopt(argv, "la", ["cli", "api-server", "code="])
+		opts, args = getopt.getopt(argv, "", ["code="])
 	except getopt.GetoptError:
 		print ( "Invalid arguments. Please use -h or --help for help." )
 		sys.exit(2)
@@ -63,15 +63,9 @@ def check_if_api_or_cli(argv):
 		print("No arguments passed, exiting program")
 		sys.exit()
 	#check if run cli or run api
-	for opt, arg in opts:
-		if (opt == "--api-server"):
-			print("API arguments passed, running API")
-			uvicorn.run(app, host="0.0.0.0", port=3500)
-			sys.exit()
-		elif (opt == "--cli"):
-			print("CLI arguments passed")
-			run_cli(opts)
-			sys.exit()
+	print("CLI arguments passed")
+	run_cli(opts)
+	sys.exit()
 
 def runfromlambda(code):
 	currentOrder = orderInfo()
@@ -79,14 +73,12 @@ def runfromlambda(code):
 	currentOrder.code = code
 	return create_screenshot_with_code(currentOrder)
 
-def run_cli():
+def run_cli(opts):
 	currentOrder = orderInfo()
 	currentOrder = get_time_vars(currentOrder)
-	currentOrder.code = "16258"
 
-
-	#for opt, arg in opts:
-	#	if opt in ("-c", "--code"): currentOrder.code = arg
+	for opt, arg in opts:
+		if opt in ("-c", "--code"): currentOrder.code = arg
 
 	#save bytes-like object to file
 	with open(screenshot_wCode_path, 'wb') as f:
@@ -94,4 +86,4 @@ def run_cli():
 		f.close()
 
 if __name__=="__main__":
-	run_cli()
+	check_if_api_or_cli(sys.argv[1:])

@@ -4,26 +4,23 @@
 Have you ever had a friend or family member order something from McDonalds on their app, but they want you to pick it up for them, but you dont have their phone? Well, this is the solution for you. This is a simple python server that will generate a screenshot of the order confirmation page from the McDonalds app. Just send a http Get request and it will return a screenshot of the order confirmation page!
 
 <img src="mcd_example_screenshot.jpg" height="500">
+## AWS Lambda
 
-## API Server
-To run this script as an API server, run it with the "--api-server" flag. This will start a server on port 3500. The server will only accept GET requests. The path is /mcd-screenshot. The server will return a png image of the order confirmation page.
+To run this script on AWS Lambda, first download the pip packages from the requirements.txt file to the code directory using the following command:
 
-### Example
-```localhost:3500/mcd-screenshot?code=1701&timezone=US/Eastern```
+```pip3 install -r requirements.txt -t .```
 
-### Query Parameters
-* code - The code that is on the receipt or app. This is the only required parameter.
-* timezone - The timezone that the order was placed in. The default is US/Pacific.
+Then zip up all pip package folders, the resources folder, lambda_function.py, and mcd_generate.py files into a zip file. Upload this zip file to AWS Lambda and you're good to go!
 
 ## CLI
-To run this script as a CLI, run it with the "--cli" flag. Pass options to the script using the flags listed below.
+To run this script locally on your computer, you will need to install the requirements from the requirements.txt file. You can do this by running the following command:
+
+```pip3 install -r requirements.txt```
+
+Then you can run the script by running the mcd_generate.py file with the --code flag. This flag is the code that is on the receipt or app. This is the only required parameter.
 
 ### Example
-```python3 mcd_generate.py --local --code="2623"```
+```python3 mcd_generate.py --code="262"```
 
-### Flags
-* --code - The code that is on the receipt or app. This is the only required parameter.
-
-## Future
-* I'll be adding a dockerfile to this project so that it can be run in a container.
-* I'll also be adding supoort for resolutions other than my iPhone 12 mini.
+## Issues
+I made this based off a screenshot from my iPhone 12 Mini, so the resolution/aspect-ratio might be off for other devices. If you have any issues, please open an issue on the github page.
