@@ -3,7 +3,7 @@
 ## Description
 Have you ever had a friend or family member order something from McDonalds on their app, but they want you to pick it up for them, but you dont have their phone? Well, this is the solution for you. This is a simple python script will generate a screenshot of the order confirmation page from the McDonalds app.
 
-<img src="mcd_example_screenshot.jpg" height="500">
+<img src="example_screenshot.jpg" height="500">
 
 ## How to use
 To run this script locally on your computer, you will need to install the requirements from the requirements.txt file. You can do this by running the following command:
