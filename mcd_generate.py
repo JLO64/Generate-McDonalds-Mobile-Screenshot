@@ -1,6 +1,7 @@
 import datetime, pytz, sys, getopt, openai, random
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+# https://github.com/keithrozario/Klayers
 
 top_screenshot_path = 'resources/top_half.jpg'
 bottom_screenshot_path = 'resources/bottom_half.jpg'
@@ -59,9 +60,11 @@ def create_screenshot(order):
 	else:
 		time_text = time_text + ":" + str(order.current_minute)
 
-	top_d1.text(( (top_width * 0.038), (51)), time_text, fill =(0, 0, 0),font=timeFont)
+	top_d1.text(( (top_width * 0.038), (63)), time_text, fill =(0, 0, 0),font=timeFont)
 
-	top_d1.text( ((top_width * 0.065) , (1510)), order.items, fill =(41, 41, 41),font=descriptionFont)
+	orderitemsstring = order.items.replace('\\n', '\n')
+	orderitemsarray = orderitemsstring.splitlines()
+	top_d1.text( ((top_width * 0.065) , (1510)), orderitemsstring, fill =(41, 41, 41),font=descriptionFont)
 
 	num_lines = len(order.items.splitlines())
 	cropped_top_height = 1580 + (num_lines * 30)
@@ -74,11 +77,19 @@ def create_screenshot(order):
 	bottom_width, bottom_height = bottom_img.size
 
 	paymentFont = ImageFont.truetype('resources/HelveticaNeue-Medium.otf', 38)
+
+	totalitemscost = 0.0
+	for i in orderitemsarray:
+		totalitemscost += float(query_openai(i))
+	paymentAmount = round(1.1 * float(totalitemscost), 2)
+	print("totalitemscost: " + str(paymentAmount))
 	
-	#limit to 2 decimal places
-	query_openai_result = query_openai(order.items)
-	paymentAmount = round(1.1 * float(query_openai_result), 2)
-	paymentText = "$" + str(paymentAmount) + " with Apple Pay " + str(random.randint(1000, 9999))
+	#paymentAmountString should always have two decimal places. If it doesn't, add a 0
+	paymentAmountString = str(paymentAmount)
+	if (len(paymentAmountString.split(".")[1]) == 1):
+		paymentAmountString = paymentAmountString + "0"
+	
+	paymentText = "$" + paymentAmountString + " with Apple Pay " + str(random.randint(1000, 9999))
 
 	bottom_d1.text( ((bottom_width * 0.247) , (80)), paymentText, fill =(41, 41, 41),font=paymentFont)
 
@@ -130,27 +141,31 @@ def run_cli(opts):
 		f.close()
 
 def query_openai(items):
-	openai.api_key = "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"
+	#set openai.api_key to the key from openai_key.txt
+	openai.api_key = open("resources/openai_key.txt", "r").read()
 	formatted_items = items.replace("\n", ", ")
-	#response = openai.Completion.create(
-	#	model="text-davinci-003",
-	#	prompt="From the following list of items from a McDonald's in California generate a total cost for the order. Output ONLY a float value. " +"({})".format(formatted_items),
-	#	#max_tokens=7,
-	#	top_p=0.1
-	#)
-	response = openai.ChatCompletion.create(
- 		model="gpt-3.5-turbo",
-		messages=[
-			{"role": "system", "content": "You are a program that guesses the value of McDonalds meals. Reply only with a numerical value and do not use words/text. For instance, you guess a value of $5.50, reply only with '5.50'"},
- 			#{"role": "user", "content": "Guess the total cost for the order. " +"({})".format(formatted_items)}
-			{"role": "user", "content": "({})".format(formatted_items)}
-		]
+	
+	model_engine = "davinci:ft-personal-2023-03-30-21-42-15"
+	prompt = formatted_items
+	max_tokens = 6
+	top_p = 0.2
+
+
+	completions = openai.Completion.create(
+	    engine=model_engine,
+	    prompt=prompt,
+	    max_tokens=max_tokens,
+	    top_p=top_p
 	)
-	print(response)
-	estimated_cost = response.choices[0]["message"]["content"]
-	if estimated_cost[-1] == ".":
-		estimated_cost = estimated_cost[:-1]
-	return estimated_cost.replace(" ", "").replace("\n", "").replace("$", "")
+
+	estimated_cost = completions.choices[0]["text"]
+	estimated_cost = estimated_cost.replace("->", "").replace("\n", "").replace(" ", "").replace("Meal", "")
+	# if there are periods before the first number, remove them
+	while estimated_cost[0] == ".":
+		estimated_cost = estimated_cost[1:]
+	print("estimated_cost of " + prompt + " : " + estimated_cost)
+	
+	return estimated_cost
 	
 
 if __name__=="__main__":

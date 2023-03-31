@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "1 Oreo Shamrock McFlurry",
+            "type": "python",
+            "request": "launch",
+            "program": "./mcd_generate.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            //add args --code 734 --name Julian --items "1 Oreo Shamrock McFlurry"
+            "args": ["--code", "734", "--name", "Julian", "--items", "1 Oreo Shamrock McFlurry"]
+        },
+        {
+            "name": "1 Cheeseburger, 1 Small Coke",
+            "type": "python",
+            "request": "launch",
+            "program": "./mcd_generate.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            //add args --code 734 --name Julian --items "1 Cheeseburger\n1 Small Coke"
+            "args": ["--code", "734", "--name", "Julian", "--items", "1 Cheeseburger\\n1 Small Coke"]
+        },
+        {
+            "name": "2 McChicken, 2 Medium Coke",
+            "type": "python",
+            "request": "launch",
+            "program": "./mcd_generate.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            //add args --code 734 --name Julian --items "2 McChicken\n2 Medium Coke"
+            "args": ["--code", "734", "--name", "Julian", "--items", "2 McChicken\\n2 Medium Coke"]
+        },
+        {
+            "name": "3 Big Mac, 3 Large Coke",
+            "type": "python",
+            "request": "launch",
+            "program": "./mcd_generate.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            //add args --code 734 --name Julian --items "3 Big Mac\n3 Large Coke"
+            "args": ["--code", "734", "--name", "Julian", "--items", "3 Big Mac\\n3 Large Coke"]
+        }
+    ]
+}
